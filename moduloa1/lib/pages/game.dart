@@ -341,6 +341,40 @@ class _GameState extends State<Game> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       body: GestureDetector(
+        onHorizontalDragEnd: (details) {
+          if (details.velocity.pixelsPerSecond.dx > 100) {
+            pauseStart();
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Inprogress'),
+                content: SingleChildScrollView(
+                  child: Text('The game is inprogress. Are you suretoquit?'),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      pauseStart();
+                    },
+                    child: Text('No'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        '/home',
+                        (route) => false,
+                      );
+                    },
+                    child: Text('Yes'),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
         onTap: () => pular(),
         onLongPress: () => invencibilidade(),
         child: SizedBox(
